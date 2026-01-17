@@ -2,6 +2,13 @@
 name = "celerix-store"
 version = "0.1.0"
 edition = "2021"
+description = "A lightweight, low-latency KV data store with 1:1 Go parity, atomic persistence, and AES-256-GCM encryption."
+license = "MIT"
+repository = "https://github.com/celerix-dev/celerix-store-rust"
+homepage = "https://github.com/celerix-dev/celerix-store-rust"
+readme = "README.md"
+keywords = ["kv", "store", "database", "json", "encryption"]
+categories = ["database-implementations", "cryptography"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

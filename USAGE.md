@@ -156,3 +156,59 @@ Podman usage is identical to Docker. You can build and run using the same files:
 podman build -t celerix-store .
 podman run -d --name celerix-store -p 7001:7001 -v ./data:/app/data:Z celerix-store
 ```
+
+---
+
+## 4. Publishing to crates.io
+
+If you decide to publish `celerix-store` to the official Rust package registry, follow these steps:
+
+### 1. Metadata Verification
+Ensure `Cargo.toml` contains the following fields (already added in the latest version):
+- `description`: A short summary of the crate.
+- `license`: An [SPDX identifier](https://spdx.org/licenses/) (e.g., `MIT OR Apache-2.0`).
+- `repository`: URL to your source code.
+- `readme`: Path to your README file.
+
+### 2. Documentation
+Rust uses triple-slash `///` comments for documentation. You can preview how your documentation will look on [docs.rs](https://docs.rs) by running:
+```bash
+cargo doc --open
+```
+
+### 3. Account Setup
+1. Create an account on [crates.io](https://crates.io).
+2. Generate an API token in your account settings.
+3. Login locally via your terminal:
+   ```bash
+   cargo login <your-token>
+   ```
+
+### 4. Dry Run
+Verify that the package is ready for upload without actually publishing it:
+```bash
+cargo publish --dry-run
+```
+
+### 5. Final Publish
+When everything is ready and tests pass, you can publish manually:
+```bash
+cargo publish
+```
+
+### 6. Automated Publishing (GitHub Actions)
+This repository is configured with a GitHub Action that automatically publishes to `crates.io` when a new version tag (e.g., `v0.1.1`) is pushed.
+
+**Setup Requirements:**
+1. Go to your GitHub repository settings.
+2. Navigate to **Secrets and variables > Actions**.
+3. Add a **New repository secret** named `CRATES_IO_TOKEN`.
+4. Paste your `crates.io` API token as the value.
+
+Once the secret is added, simply tagging your commit will trigger the release:
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+Once published, users can simply add `celerix-store = "0.1.0"` to their dependencies instead of using the Git URL.
