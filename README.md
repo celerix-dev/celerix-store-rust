@@ -1,5 +1,7 @@
 # Celerix Store (Rust)
 
+[![crates.io](https://img.shields.io/crates/v/celerix-store.svg)](https://crates.io/crates/celerix-store)
+
 A lightweight, low-latency Key-Value (KV) data store designed for the Celerix suite of applications. This is a high-performance Rust implementation that is 1:1 compatible with the original Go version.
 
 ## Key Features
@@ -26,8 +28,7 @@ cargo run --bin celerix-stored
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-# Import from GitHub
-celerix-store = { git = "https://github.com/celerix-dev/celerix-store-rust.git", tag = "v0.1.1" }
+celerix-store = "0.1.0"
 tokio = { version = "1.0", features = ["full"] }
 serde_json = "1.0"
 ```
