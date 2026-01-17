@@ -26,8 +26,8 @@ cargo run --bin celerix-stored
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-# Import from GitHub (replace with your repository URL)
-celerix-store = { git = "https://github.com/your-org/celerix-store-rust.git", tag = "v0.1.0" }
+# Import from GitHub
+celerix-store = { git = "https://github.com/celerix-dev/celerix-store-rust.git", tag = "v0.1.1" }
 tokio = { version = "1.0", features = ["full"] }
 serde_json = "1.0"
 ```
