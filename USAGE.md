@@ -8,12 +8,18 @@ The `celerix-store` SDK provides a unified interface for both embedded (local) a
 
 ### Initialization
 
-Add `celerix-store` to your `Cargo.toml`. You can use a local path for development or a Git URL for production/remote builds:
+Add `celerix-store` to your `Cargo.toml`. You can use the official crate (recommended) or a Git URL for specific versions:
 
-**Git Dependency (Recommended for remote builds):**
+**Crates.io (Recommended):**
 ```toml
 [dependencies]
-celerix-store = { git = "https://github.com/your-org/celerix-store-rust.git", tag = "v0.1.0" }
+celerix-store = "0.1.0"
+```
+
+**Git Dependency:**
+```toml
+[dependencies]
+celerix-store = { git = "https://github.com/celerix-dev/celerix-store-rust.git", tag = "v0.1.0" }
 ```
 
 **Local Path (For local development):**
