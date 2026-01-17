@@ -4,6 +4,27 @@ use crate::{CelerixStore, Result};
 use crate::engine::{MemStore, Persistence};
 use crate::sdk::Client;
 
+/// Initializes a [`CelerixStore`] based on the environment.
+/// 
+/// `new` automatically detects whether to connect to a remote server or 
+/// initialize a local embedded engine:
+/// 
+/// 1. If `CELERIX_STORE_ADDR` environment variable is set, it attempts to 
+///    connect to that address in **Remote Mode**.
+/// 2. Otherwise, it initializes a [`MemStore`] with [`Persistence`] in the 
+///    specified `data_dir` in **Embedded Mode**.
+/// 
+/// # Examples
+/// 
+/// ```no_run
+/// use celerix_store::sdk;
+/// 
+/// #[tokio::main]
+/// async fn main() -> anyhow::Result<()> {
+///     let store = sdk::new("./data").await?;
+///     Ok(())
+/// }
+/// ```
 pub async fn new(data_dir: &str) -> Result<Arc<dyn CelerixStore>> {
     if let Ok(addr) = env::var("CELERIX_STORE_ADDR") {
         if !addr.is_empty() {

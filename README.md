@@ -3,7 +3,7 @@
 [![crates.io](https://img.shields.io/crates/v/celerix-store.svg)](https://crates.io/crates/celerix-store)
 [![docs.rs](https://docs.rs/celerix-store/badge.svg)](https://docs.rs/celerix-store)
 
-A lightweight, low-latency Key-Value (KV) data store designed for the Celerix suite of applications. This is a high-performance Rust implementation that is 1:1 compatible with the original Go version.
+A lightweight, low-latency Key-Value (KV) data store. This is a high-performance Rust implementation that is 1:1 compatible with the original Go version.
 
 ## Key Features
 

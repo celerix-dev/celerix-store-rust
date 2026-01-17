@@ -8,6 +8,10 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 type StoreData = HashMap<String, HashMap<String, HashMap<String, serde_json::Value>>>;
 
+/// A thread-safe, in-memory implementation of the [`CelerixStore`] trait.
+/// 
+/// `MemStore` maintains all data in memory for high-performance concurrent access
+/// and supports asynchronous persistence to JSON files.
 pub struct MemStore {
     data: RwLock<StoreData>,
     persistence: Option<Arc<Persistence>>,
@@ -15,6 +19,10 @@ pub struct MemStore {
 }
 
 impl MemStore {
+    /// Initializes a new `MemStore`.
+    /// 
+    /// - `initial_data`: Existing data to load into the store.
+    /// - `persistence`: Optional persistence handler for background saves.
     pub fn new(initial_data: StoreData, persistence: Option<Arc<Persistence>>) -> Self {
         Self {
             data: RwLock::new(initial_data),
@@ -23,6 +31,9 @@ impl MemStore {
         }
     }
 
+    /// Waits for all background persistence tasks to complete.
+    /// 
+    /// This is useful during graceful shutdown to ensure no data is lost.
     pub async fn wait(&self) {
         while self.pending_tasks.load(Ordering::SeqCst) > 0 {
             tokio::time::sleep(std::time::Duration::from_millis(10)).await;

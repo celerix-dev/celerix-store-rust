@@ -5,12 +5,17 @@ use crate::{CelerixStore, Result};
 use log::{info, error};
 use tokio::sync::Semaphore;
 
+/// A TCP router that dispatches incoming commands to a [`CelerixStore`].
+/// 
+/// `Router` handles concurrent TCP connections (up to 100 by default) and 
+/// implements the Celerix Store network protocol.
 pub struct Router {
     store: Arc<dyn CelerixStore>,
     semaphore: Arc<Semaphore>,
 }
 
 impl Router {
+    /// Creates a new `Router` for the given store.
     pub fn new(store: Arc<dyn CelerixStore>) -> Self {
         Self { 
             store,
@@ -18,6 +23,9 @@ impl Router {
         }
     }
 
+    /// Starts the TCP server and listens for incoming connections on the specified port.
+    /// 
+    /// This method runs indefinitely until the process is terminated.
     pub async fn listen(&self, port: &str) -> Result<()> {
         let listener = TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
         info!("Celerix Store listening on port {}", port);
@@ -47,6 +55,10 @@ impl Router {
     }
 }
 
+/// Handles a single TCP connection by reading commands and writing responses.
+/// 
+/// This function is used by both the [`Router`] and the integration tests to
+/// process the Celerix Store protocol.
 pub async fn handle_connection(mut socket: TcpStream, store: Arc<dyn CelerixStore>) -> Result<()> {
     let (reader, mut writer) = socket.split();
     let mut reader = BufReader::new(reader);

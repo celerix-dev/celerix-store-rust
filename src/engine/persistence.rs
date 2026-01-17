@@ -4,11 +4,21 @@ use std::path::{Path, PathBuf};
 use crate::{Result, Error};
 use log::warn;
 
+#[allow(unused_imports)]
+use crate::engine::MemStore;
+
+/// Handles disk I/O for the [`MemStore`].
+/// 
+/// Persistence uses an atomic "write-then-rename" strategy to ensure data integrity.
+/// Each persona is stored in its own `.json` file.
 pub struct Persistence {
     data_dir: PathBuf,
 }
 
 impl Persistence {
+    /// Initializes a new `Persistence` handler in the specified directory.
+    /// 
+    /// If the directory does not exist, it will be created.
     pub fn new<P: AsRef<Path>>(dir: P) -> Result<Self> {
         let dir = dir.as_ref().to_path_buf();
         if !dir.exists() {
@@ -17,6 +27,10 @@ impl Persistence {
         Ok(Self { data_dir: dir })
     }
 
+    /// Writes a single persona's data to a JSON file atomically.
+    /// 
+    /// This method writes to a temporary file first and then renames it to the
+    /// final destination, preventing file corruption during power failures.
     pub fn save_persona(&self, persona_id: &str, data: &HashMap<String, HashMap<String, serde_json::Value>>) -> Result<()> {
         let file_path = self.data_dir.join(format!("{}.json", persona_id));
         let temp_path = file_path.with_extension("json.tmp");
@@ -29,6 +43,10 @@ impl Persistence {
         Ok(())
     }
 
+    /// Loads all persona data found in the data directory.
+    /// 
+    /// Scans for all `.json` files in the `data_dir` and parses them into the
+    /// store's internal data structure.
     pub fn load_all(&self) -> Result<HashMap<String, HashMap<String, HashMap<String, serde_json::Value>>>> {
         let mut all_data = HashMap::new();
 

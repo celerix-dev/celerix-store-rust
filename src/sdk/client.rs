@@ -8,6 +8,11 @@ use tokio::sync::Mutex;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
+/// A remote client for the Celerix Store.
+/// 
+/// `Client` implements the [`CelerixStore`] trait and communicates with a 
+/// `celerix-stored` daemon over TCP. It features automatic reconnection and 
+/// exponential backoff retries.
 pub struct Client {
     #[allow(dead_code)]
     addr: String,
@@ -20,6 +25,7 @@ struct ClientInner {
 }
 
 impl Client {
+    /// Connects to a remote Celerix Store daemon at the specified address.
     pub async fn connect(addr: &str) -> Result<Self> {
         let inner = Client::connect_inner(addr).await?;
         Ok(Self {
@@ -82,11 +88,17 @@ impl Client {
         })
     }
 
+    /// Retrieves a type-safe value using generics.
+    /// 
+    /// Automatically handles JSON deserialization into the target type.
     pub async fn get_generic<T: DeserializeOwned>(&self, persona_id: &str, app_id: &str, key: &str) -> Result<T> {
         let val = self.get(persona_id, app_id, key).await?;
         Ok(serde_json::from_value(val)?)
     }
 
+    /// Stores a type-safe value using generics.
+    /// 
+    /// Automatically handles JSON serialization of the value.
     pub async fn set_generic<T: Serialize>(&self, persona_id: &str, app_id: &str, key: &str, value: T) -> Result<()> {
         let val = serde_json::to_value(value)?;
         self.set(persona_id, app_id, key, val).await

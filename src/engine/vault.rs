@@ -4,6 +4,9 @@ use aes_gcm::{
 };
 use crate::{Result, Error};
 
+/// Encrypts a plaintext string using AES-256-GCM and a 32-byte key.
+/// 
+/// Returns a hex-encoded string containing the nonce followed by the ciphertext.
 pub fn encrypt(plaintext: &str, key: &[u8]) -> Result<String> {
     if key.len() != 32 {
         return Err(Error::Internal("Key must be 32 bytes".to_string()));
@@ -17,6 +20,10 @@ pub fn encrypt(plaintext: &str, key: &[u8]) -> Result<String> {
     Ok(hex::encode(combined))
 }
 
+/// Decrypts a hex-encoded ciphertext string using AES-256-GCM and a 32-byte key.
+/// 
+/// The `cipher_hex` must be the output of [`encrypt`], containing the 12-byte
+/// nonce followed by the ciphertext.
 pub fn decrypt(cipher_hex: &str, key: &[u8]) -> Result<String> {
     if key.len() != 32 {
         return Err(Error::Internal("Key must be 32 bytes".to_string()));
