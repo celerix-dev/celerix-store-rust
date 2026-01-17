@@ -1,6 +1,6 @@
 [package]
 name = "celerix-store"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A lightweight, low-latency KV data store with 1:1 parity with the orginal golang version, atomic persistence, and AES-256-GCM encryption."
 license = "MIT"
