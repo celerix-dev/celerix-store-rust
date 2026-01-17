@@ -55,8 +55,15 @@ impl MemStore {
 impl KVReader for MemStore {
     async fn get(&self, persona_id: &str, app_id: &str, key: &str) -> Result<serde_json::Value> {
         let data = self.data.read().unwrap();
-        data.get(persona_id)
-            .ok_or(Error::PersonaNotFound)?
+        let persona = data.get(persona_id);
+        
+        if persona.is_none() {
+            // Log for debugging if needed
+            // log::debug!("Persona {} not found, checking legacy or empty", persona_id);
+            return Err(Error::PersonaNotFound);
+        }
+
+        persona.unwrap()
             .get(app_id)
             .ok_or(Error::AppNotFound)?
             .get(key)
